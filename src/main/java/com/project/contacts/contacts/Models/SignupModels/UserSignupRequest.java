@@ -1,4 +1,4 @@
-package com.project.contacts.contacts.Models;
+package com.project.contacts.contacts.Models.SignupModels;
 
 public class UserSignupRequest {
 private String name;

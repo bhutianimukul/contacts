@@ -2,9 +2,9 @@ package com.project.contacts.contacts.Services;
 
 import com.project.contacts.contacts.Models.Dto.UserDto;
 
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetailsService;
+public interface UserServices extends UserDetailsService
 
-@Service
-public interface UserServices {
+{
     public UserDto signupUser(UserDto user);
 }

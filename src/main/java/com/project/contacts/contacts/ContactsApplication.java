@@ -14,4 +14,5 @@ public class ContactsApplication {
     public BCryptPasswordEncoder bcrypt(){
 return new BCryptPasswordEncoder();
 	}
+
 }
