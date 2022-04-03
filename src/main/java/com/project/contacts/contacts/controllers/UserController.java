@@ -51,7 +51,7 @@ public class UserController {
     @PostMapping("/signin")
     public UserSigninResponse userSignin(@RequestBody UserSigninRequest user) {
         UserSigninResponse response = new UserSigninResponse();
-        response.setEmail(user.getEmail());
+
         try {
             authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
@@ -59,8 +59,9 @@ public class UserController {
 
             throw new UsernameNotFoundException("User not found");
         }
-
+        UserDto userDto = service.getUserByEmail(user.getEmail());
         String token = jwt.generateToken(user.getEmail());
+        response.setUserId(userDto.getUserId());
         response.setToken(token);
         return response;
     }

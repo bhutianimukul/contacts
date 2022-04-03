@@ -1,17 +1,22 @@
 package com.project.contacts.contacts.Models.SigninModels;
 
 public class UserSigninResponse {
-    private String email;
+    private String userId;
+
     private String token;
-    public String getEmail() {
-        return email;
+
+    public String getUserId() {
+        return userId;
     }
-    public void setEmail(String email) {
-        this.email = email;
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
+
     public String getToken() {
         return token;
     }
+
     public void setToken(String token) {
         this.token = token;
     }
