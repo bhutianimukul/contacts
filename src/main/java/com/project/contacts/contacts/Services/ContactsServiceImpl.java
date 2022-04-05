@@ -46,4 +46,19 @@ public class ContactsServiceImpl implements ContactsService {
 
     }
 
+    @Override
+    public ContactModel getContactById(String contactId) {
+        ContactModel contact = new ContactModel();
+        ContactEntity contactEntity = repo.findByContactId(contactId);
+        if (contactEntity == null)
+            try {
+                throw new Exception("Contact not found");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        BeanUtils.copyProperties(contactEntity, contact);
+        return contact;
+
+    }
+
 }

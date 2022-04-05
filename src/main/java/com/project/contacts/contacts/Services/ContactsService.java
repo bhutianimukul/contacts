@@ -11,4 +11,6 @@ public interface ContactsService {
 
     public void addContact(ContactModel contact, String userId);
 
+    public ContactModel getContactById(String contactId);
+
 }

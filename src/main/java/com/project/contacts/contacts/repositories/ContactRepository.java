@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 // DAO  
 @Repository
 public interface ContactRepository extends PagingAndSortingRepository<ContactEntity, String> {
-
+    public ContactEntity findByContactId(String contactId);
 }

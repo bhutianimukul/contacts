@@ -8,6 +8,9 @@ public class ContactModel {
     private String image;
     private String category;
 
+    public ContactModel() {
+    }
+
     public ContactModel(String contactId, String name, String phoneNo, String email, String image, String category) {
         this.contactId = contactId;
         this.category = category;
