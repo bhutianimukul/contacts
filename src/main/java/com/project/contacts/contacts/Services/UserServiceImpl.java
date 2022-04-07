@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Models.Entities.UserEntity;
 import com.project.contacts.contacts.Utilities.JWTUtils;
+import com.project.contacts.contacts.Utilities.Utils;
 import com.project.contacts.contacts.repositories.UserRepository;
 
 import org.springframework.beans.BeanUtils;
@@ -21,6 +22,8 @@ public class UserServiceImpl implements UserServices {
     UserRepository repo;
     @Autowired
     BCryptPasswordEncoder bcrypt;
+    @Autowired
+    Utils util;
     // @Autowired
     // AuthenticationManager authenticationManager;
     @Autowired
@@ -33,6 +36,8 @@ public class UserServiceImpl implements UserServices {
             throw new RuntimeException("User already signed up");
         }
         user.setEncryptedPassword(bcrypt.encode(user.getPassword()));
+        user.setEnabled(false);
+        user.setVerificationToken(util.generateUserId(15));
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user, userEntity);
         repo.save(userEntity);
@@ -56,6 +61,29 @@ public class UserServiceImpl implements UserServices {
             throw new UsernameNotFoundException(email);
         BeanUtils.copyProperties(userEntity, userDto);
         return userDto;
+    }
+
+    @Override
+    public void removeUser(UserDto user) throws Exception {
+        try {
+            repo.deleteById(user.getUserId());
+        } catch (Exception e) {
+            throw new Exception("Unable to remove");
+        }
+    }
+
+    @Override
+    public void verify(String verificationToken) throws Exception {
+        // verification toekn to user
+        if (verificationToken == null)
+            throw new Exception("Invalid Link");
+        UserEntity userEntity = repo.findByVerificationToken(verificationToken);
+        // user set enable true
+        userEntity.setEnabled(true);
+        // verification token null
+        userEntity.setVerificationToken(null);
+        // save
+        repo.save(userEntity);
     }
 
 }

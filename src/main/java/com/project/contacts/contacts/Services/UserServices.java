@@ -10,4 +10,8 @@ public interface UserServices extends UserDetailsService
     public UserDto signupUser(UserDto user);
 
     public UserDto getUserByEmail(String email);
+
+    public void removeUser(UserDto user) throws Exception;
+
+    public void verify(String verificationToken) throws Exception;
 }

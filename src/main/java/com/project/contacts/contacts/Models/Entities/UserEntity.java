@@ -17,6 +17,22 @@ public class UserEntity implements Serializable {
     @Column(name = "user_id", length = 30)
     public String userId;
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
     @Column(name = "name", nullable = false, length = 50)
     private String name;
     @Column(name = "email", nullable = false)
@@ -27,6 +43,10 @@ public class UserEntity implements Serializable {
     private String encryptedPassword;
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ContactEntity> contacts;
+    @Column(name = "enabled")
+    private boolean enabled = false;
+    @Column(name = "verification_token")
+    private String verificationToken;
 
     public String getUserId() {
         return userId;
