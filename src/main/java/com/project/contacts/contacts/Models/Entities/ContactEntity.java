@@ -27,9 +27,9 @@ public class ContactEntity implements Serializable {
     @Column(name = "category", nullable = false)
     private String category;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    public UserEntity user;
     @Column(name = "image")
     private String image;
 

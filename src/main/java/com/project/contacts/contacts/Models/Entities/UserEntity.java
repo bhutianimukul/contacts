@@ -15,7 +15,7 @@ public class UserEntity implements Serializable {
     public static final long serialVersionUID = 10l;
     @Id
     @Column(name = "user_id", length = 30)
-    private String userId;
+    public String userId;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -25,7 +25,7 @@ public class UserEntity implements Serializable {
     private String phoneNo;
     @Column(name = "encrypted_password", nullable = false)
     private String encryptedPassword;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ContactEntity> contacts;
 
     public String getUserId() {

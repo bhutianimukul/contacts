@@ -12,6 +12,8 @@ import com.project.contacts.contacts.repositories.UserRepository;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,10 +26,12 @@ public class ContactsServiceImpl implements ContactsService {
     Utils util;
 
     @Override
-    public List<ContactModel> getAllContacts(String userId) {
-        UserEntity user = userRepo.findByUserId(userId);
+    public List<ContactModel> getAllContacts(String userId, int page, int limit) {
+        PageRequest pg = PageRequest.of(page, limit);
+        Page<ContactEntity> paging = repo.findAllContacts(userId, pg);
+        List<ContactEntity> contacts = paging.getContent();
         List<ContactModel> list = new ArrayList<>();
-        for (ContactEntity e : user.getContacts()) {
+        for (ContactEntity e : contacts) {
             list.add(new ContactModel(e.getContactId(), e.getName(), e.getPhoneNo(), e.getEmail(), e.getImage(),
                     e.getCategory()));
         }
@@ -59,6 +63,37 @@ public class ContactsServiceImpl implements ContactsService {
         BeanUtils.copyProperties(contactEntity, contact);
         return contact;
 
+    }
+
+    @Override
+    public String deleteContactOnce(String contactId, String userId) throws Exception {
+
+        try {
+            UserEntity user = userRepo.findByUserId(userId);
+            List<ContactEntity> contacts = user.getContacts();
+
+            for (ContactEntity ce : contacts) {
+                if (ce.getContactId().equals(contactId)) {
+                    contacts.remove(ce);
+                }
+            }
+            user.setContacts(contacts);
+            userRepo.save(user);
+
+        } catch (Exception e) {
+            throw new Exception("Contact Not Found");
+        }
+        return contactId;
+    }
+
+    @Override
+    public void deleteContactMultiple(List<String> list, String userId) throws Exception {
+
+        try {
+            repo.deleteAllById(list);
+        } catch (Exception e) {
+            throw new Exception("Contact Not Found");
+        }
     }
 
 }
