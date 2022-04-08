@@ -14,4 +14,6 @@ public interface UserServices extends UserDetailsService
     public void removeUser(UserDto user) throws Exception;
 
     public void verify(String verificationToken) throws Exception;
+
+    public boolean changePassword(String email, String newPassword);
 }

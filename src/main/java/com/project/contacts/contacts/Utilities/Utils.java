@@ -21,4 +21,12 @@ public class Utils {
             sb.append(chars.charAt(rnd.nextInt(chars.length())));
         return sb.toString();
     }
+
+    public String generateOtp() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            sb.append(rnd.nextInt(9) * 10);
+        }
+        return sb.toString();
+    }
 }

@@ -38,6 +38,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
       http.authorizeRequests().antMatchers("/users/signup/**").permitAll();
       http.authorizeRequests().antMatchers(HttpMethod.POST, "/users/signin").permitAll();
       http.authorizeRequests().antMatchers("/h2/**").permitAll();
+      http.authorizeRequests().antMatchers("/password/**").permitAll();
 
       http.authorizeRequests().anyRequest()
             .authenticated();

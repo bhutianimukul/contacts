@@ -15,6 +15,28 @@ public class EmailService {
     @Value("spring.mail.username")
     String sender;
 
+    public boolean sendOtp(String email, String otp) {
+        try {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            String newBody = new String();
+            newBody = newBody
+                    + "ONE TIME PASSWORD \n Your OTP for Contact Manager Application is \n "
+                    + otp;
+
+            msg.setTo(email);
+            msg.setSubject("CONTACT MANAGER OTP");
+
+            msg.setText(newBody);
+
+            msg.setFrom(sender);
+            javaMailSender.send(msg);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
     public boolean sendEmail(String subject, String to, String url) {
         try {
             SimpleMailMessage msg = new SimpleMailMessage();
