@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.security.core.userdetails.User;
 import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Models.Entities.UserEntity;
+import com.project.contacts.contacts.Models.SignupModels.UserSignupRequest;
 import com.project.contacts.contacts.Utilities.JWTUtils;
 import com.project.contacts.contacts.Utilities.Utils;
 import com.project.contacts.contacts.repositories.UserRepository;
@@ -102,13 +103,29 @@ public class UserServiceImpl implements UserServices {
             UserEntity userEntity = repo.findByEmail(email);
             if (userEntity != null) {
                 userEntity.setEncryptedPassword(bcrypt.encode(newPassword));
-                System.out.println(bcrypt.encode(newPassword).equals(userEntity.getEncryptedPassword()));
+                // System.out.println(bcrypt.encode(newPassword).equals(userEntity.getEncryptedPassword()));
                 repo.save(userEntity);
             }
         } catch (Exception e) {
             return false;
         }
         otpService.clearOTP(email);
+        return true;
+    }
+
+    @Override
+    @Modifying
+    @Transactional
+    public boolean updateUserProfile(UserDto userDto, UserSignupRequest user) {
+        try {
+            UserEntity userEntity = repo.findByUserId(userDto.getUserId());
+
+            BeanUtils.copyProperties(user, userEntity);
+
+            repo.save(userEntity);
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 

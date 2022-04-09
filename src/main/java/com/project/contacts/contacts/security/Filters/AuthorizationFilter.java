@@ -33,8 +33,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         String token = "";
 
         if (header == null || !header.startsWith("Bearer ")) {
-            System.out.println("**************************************");
-            System.out.println("inside no token");
+            // System.out.println("**************************************");
+            // System.out.println("inside no token");
 
             chain.doFilter(request, response);
             return;
@@ -46,8 +46,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
             String email = jwt.getUsernameFromToken(token);
             UserDetails user = service.loadUserByUsername(email);
-            System.out.println("**************************************");
-            System.out.println(email + " " + user.getUsername());
+            // System.out.println("**************************************");
+            // System.out.println(email + " " + user.getUsername());
             if (email != null && jwt.validateToken(token, user)) {
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null,
                         new ArrayList<>());

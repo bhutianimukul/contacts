@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -106,5 +107,27 @@ public class ContactController {
     }
     // ! Update Contact
     // ! Search Contact
+
+    @PutMapping("/updateContact")
+    public ResponseEntity<Object> updateContact(@RequestBody ContactModel user, Principal principal) {
+        // name image phoneno
+        UserDto userDto = userService.getUserByEmail(principal.getName());
+        if (userDto.isEnabled() == false) {
+            Map<String, String> map = new HashMap<>();
+            map.put("message", "User Not Verified");
+            // throw new UsernameNotFoundException("User not found");
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+        }
+        Map<String, String> map = new HashMap<>();
+
+        boolean flag = service.updateContact(userDto, user);
+
+        if (!flag) {
+            map.put("message", "Unable to update Contact. Please try again later.");
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        map.put("message", "Contact Updated Successfully!!");
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
 
 }

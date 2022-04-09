@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import com.project.contacts.contacts.Models.Contacts.ContactModel;
+import com.project.contacts.contacts.Models.Dto.UserDto;
 
 @Service
 public interface ContactsService {
@@ -16,5 +17,7 @@ public interface ContactsService {
     public String deleteContactOnce(String contactId, String userId) throws Exception;
 
     public void deleteContactMultiple(List<String> list, String userId) throws Exception;
+
+    public boolean updateContact(UserDto userDto, ContactModel user);
 
 }

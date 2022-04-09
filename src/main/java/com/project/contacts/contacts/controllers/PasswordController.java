@@ -44,14 +44,14 @@ public class PasswordController {
         } catch (Exception e) {
             // userDto = null;
             map.put("message", "User Not Found, Enter a valid email.");
-            System.out.println(e);
+            // System.out.println(e);
 
             return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
 
         // if exist send otp
         String otp = "" + otpService.generateOTP(userDto.getEmail());
-        System.out.println("Generated OTP " + otp);
+        // System.out.println("Generated OTP " + otp);
         boolean flag = emailService.sendOtp(email, otp);
         // sendOtp();
         if (!flag) {
@@ -74,8 +74,8 @@ public class PasswordController {
 
         String originalOtp = "" + otpService.getOtp(email);
         Map<String, Boolean> map = new HashMap<>();
-        System.out.println("session OTP " + originalOtp);
-        System.out.println("entered OTP " + enteredOtp);
+        // System.out.println("session OTP " + originalOtp);
+        // System.out.println("entered OTP " + enteredOtp);
 
         if (originalOtp.equals(enteredOtp)) {
             map.put("verified", true);

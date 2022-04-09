@@ -3,7 +3,10 @@ package com.project.contacts.contacts.Services;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.project.contacts.contacts.Models.Contacts.ContactModel;
+import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Models.Entities.ContactEntity;
 import com.project.contacts.contacts.Models.Entities.UserEntity;
 import com.project.contacts.contacts.Utilities.Utils;
@@ -14,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -94,6 +98,32 @@ public class ContactsServiceImpl implements ContactsService {
         } catch (Exception e) {
             throw new Exception("Contact Not Found");
         }
+    }
+
+    @Override
+    @Modifying
+    @Transactional
+    public boolean updateContact(UserDto userDto, ContactModel contact) {
+        try {
+            UserEntity userEntity = userRepo.findByUserId(userDto.getUserId());
+
+            List<ContactEntity> list = userEntity.getContacts();
+            System.out.println(contact);
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getContactId() == contact.getContactId()) {
+                    ContactEntity c = list.remove(i);
+                    BeanUtils.copyProperties(contact, c);
+                    System.out.println(c);
+                    list.add(c);
+                    break;
+                }
+            }
+            userEntity.setContacts(list);
+            userRepo.save(userEntity);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
 }
