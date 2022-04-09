@@ -106,10 +106,9 @@ public class ContactController {
         return ResponseEntity.ok(ans);
     }
     // ! Update Contact
-    // ! Search Contact
 
     @PutMapping("/updateContact")
-    public ResponseEntity<Object> updateContact(@RequestBody ContactModel user, Principal principal) {
+    public ResponseEntity<Object> updateContact(@RequestBody Map<String, String> user, Principal principal) {
         // name image phoneno
         UserDto userDto = userService.getUserByEmail(principal.getName());
         if (userDto.isEnabled() == false) {
@@ -118,9 +117,11 @@ public class ContactController {
             // throw new UsernameNotFoundException("User not found");
             return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
         }
-        Map<String, String> map = new HashMap<>();
-
         boolean flag = service.updateContact(userDto, user);
+
+        // UserDto userDto = userService.getUserByEmail(principal.getName());
+
+        Map<String, String> map = new HashMap<>();
 
         if (!flag) {
             map.put("message", "Unable to update Contact. Please try again later.");

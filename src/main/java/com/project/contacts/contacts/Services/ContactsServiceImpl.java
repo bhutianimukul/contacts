@@ -2,6 +2,7 @@ package com.project.contacts.contacts.Services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -12,7 +13,7 @@ import com.project.contacts.contacts.Models.Entities.UserEntity;
 import com.project.contacts.contacts.Utilities.Utils;
 import com.project.contacts.contacts.repositories.ContactRepository;
 import com.project.contacts.contacts.repositories.UserRepository;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class ContactsServiceImpl implements ContactsService {
     @Autowired
     ContactRepository repo;
@@ -28,6 +30,7 @@ public class ContactsServiceImpl implements ContactsService {
     UserRepository userRepo;
     @Autowired
     Utils util;
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContactsServiceImpl.class);
 
     @Override
     public List<ContactModel> getAllContacts(String userId, int page, int limit) {
@@ -103,23 +106,62 @@ public class ContactsServiceImpl implements ContactsService {
     @Override
     @Modifying
     @Transactional
-    public boolean updateContact(UserDto userDto, ContactModel contact) {
-        try {
-            UserEntity userEntity = userRepo.findByUserId(userDto.getUserId());
 
-            List<ContactEntity> list = userEntity.getContacts();
-            System.out.println(contact);
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getContactId() == contact.getContactId()) {
-                    ContactEntity c = list.remove(i);
-                    BeanUtils.copyProperties(contact, c);
-                    System.out.println(c);
-                    list.add(c);
-                    break;
-                }
-            }
-            userEntity.setContacts(list);
-            userRepo.save(userEntity);
+    public boolean updateContact(UserDto userDto, Map<String, String> newContact) {
+        try {
+            ContactEntity oldContact = repo.findContactsByIdAndUserId(newContact.get("contactId"), userDto.getUserId());
+            log.info(oldContact.getName());
+
+            String name = newContact.containsKey("name") ? newContact.get("name") : oldContact.getName();
+            String email = newContact.containsKey("email") ? newContact.get("email") : oldContact.getEmail();
+            String image = newContact.containsKey("image") ? newContact.get("image") : oldContact.getImage();
+            String category = newContact.containsKey("category") ? newContact.get("category")
+                    : oldContact.getCategory();
+            String phoneNo = newContact.containsKey("phoneNo") ? newContact.get("phoneNo") : oldContact.getPhoneNo();
+
+            oldContact.setName(name);
+            oldContact.setEmail(email);
+            oldContact.setCategory(category);
+            oldContact.setImage(image);
+            oldContact.setPhoneNo(phoneNo);
+            log.info(oldContact.getName());
+            repo.save(oldContact);
+            // UserEntity userEntity = userRepo.findByUserId(userDto.getUserId());
+            // ContactEntity updatedContact = new ContactEntity();
+            // List<ContactEntity> list = userEntity.getContacts();
+            // log.info("contact Name from dto" + userDto.getName());
+            // log.info("contact Name from dto" + userDto.getName());
+            // log.error("before");
+            // for (ContactEntity c : list) {
+            // log.info(c.getName());
+            // if (c.getContactId().equals(contact.getContactId())) {
+
+            // BeanUtils.copyProperties(c, updatedContact);
+            // list.remove(c);
+            // log.info("contact Name in db" + updatedContact.getName());
+
+            // break;
+            // }
+
+            // }
+            // // for (int i = 0; i < list.size(); i++) {
+            // // if (list.get(i).getContactId() == contact.getContactId()) {
+            // // ContactEntity c = list.remove(i);
+            // // BeanUtils.copyProperties(c, updatedContact);
+            // // System.out.println("*** contact Found"+ c.getName());
+            // // break;
+            // // }
+            // // }
+
+            // BeanUtils.copyProperties(contact, updatedContact);
+            // list.add(updatedContact);
+            // log.error("before");
+            // for (ContactEntity c : list) {
+            // log.info(c.getName());
+            // }
+            // log.info("contact Name updated" + updatedContact.getName());
+            // userEntity.setContacts(list);
+            // userRepo.save(userEntity);
         } catch (Exception e) {
             return false;
         }

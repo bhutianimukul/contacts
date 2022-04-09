@@ -18,6 +18,6 @@ public interface ContactsService {
 
     public void deleteContactMultiple(List<String> list, String userId) throws Exception;
 
-    public boolean updateContact(UserDto userDto, ContactModel user);
+    public boolean updateContact(UserDto userDto, Map<String, String> user);
 
 }

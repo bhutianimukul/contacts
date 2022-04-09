@@ -1,7 +1,5 @@
 package com.project.contacts.contacts.Utilities;
 
-import java.sql.Date;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,9 +18,9 @@ public class JWTUtils {
 
     // generate token
     public String generateToken(String email) {
+
         return Jwts.builder()
                 .setSubject(email)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();
     }

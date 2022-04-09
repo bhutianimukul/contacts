@@ -16,4 +16,8 @@ public interface ContactRepository extends JpaRepository<ContactEntity, String> 
 
     @Query(value = "Select * from contacts  where user_id=:id", nativeQuery = true)
     public Page<ContactEntity> findAllContacts(@Param("id") String id, Pageable pg);
+
+    @Query(value = "Select * from contacts  where user_id=:userId and contact_id=:contactId", nativeQuery = true)
+    public ContactEntity findContactsByIdAndUserId(@Param("contactId") String contactId,
+            @Param("userId") String userId);
 }

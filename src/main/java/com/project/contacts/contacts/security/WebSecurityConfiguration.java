@@ -44,6 +44,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
       http.authorizeRequests().anyRequest()
             .authenticated();
       http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+
       http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
       http.headers().frameOptions().disable();
 

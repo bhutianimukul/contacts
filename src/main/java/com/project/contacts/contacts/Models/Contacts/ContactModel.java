@@ -1,5 +1,8 @@
 package com.project.contacts.contacts.Models.Contacts;
 
+import lombok.Data;
+
+@Data
 public class ContactModel {
     private String contactId;
     private String name;

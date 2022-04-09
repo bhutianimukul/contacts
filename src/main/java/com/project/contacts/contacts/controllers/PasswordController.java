@@ -1,8 +1,6 @@
 package com.project.contacts.contacts.controllers;
 
 import java.util.*;
-
-import javax.servlet.http.HttpSession;
 import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Models.SigninModels.UserSigninRequest;
 import com.project.contacts.contacts.Services.EmailService;

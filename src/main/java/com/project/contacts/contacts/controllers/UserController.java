@@ -1,6 +1,5 @@
 package com.project.contacts.contacts.controllers;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -118,6 +117,12 @@ public class UserController {
     @PutMapping("/updateProfile")
     public ResponseEntity<Object> updateProfile(@RequestBody UserSignupRequest user) {
         // name image phoneno
+        if (user.getPassword() != null) {
+            Map<String, String> map = new HashMap<>();
+            map.put("message", "U can not update password");
+            // throw new UsernameNotFoundException("User not found");
+            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+        }
         UserDto userDto = service.getUserByEmail(user.getEmail());
         if (userDto.isEnabled() == false) {
             Map<String, String> map = new HashMap<>();
@@ -135,5 +140,22 @@ public class UserController {
         map.put("message", "Profile Updated Successfully!!");
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
+    // @GetMapping("/logout")
+    // public ResponseEntity<?> logout(Principal principal) {
+
+    // UserDto userDto = service.getUserByEmail(principal.getName());
+
+    // Map<String, String> map = new HashMap<>();
+
+    // boolean flag = service.updateUserProfile(userDto, user);
+    // if (!flag) {
+    // map.put("message", "Unable to update your Profile. Please try again later.");
+    // return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
+    // map.put("message", "Profile Updated Successfully!!");
+    // return new ResponseEntity<>(map, HttpStatus.OK);
+    // return ResponseEntity.ok(map);
+    // }
 
 }
