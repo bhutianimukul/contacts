@@ -47,6 +47,16 @@ public class UserEntity implements Serializable {
     private boolean enabled = false;
     @Column(name = "verification_token")
     private String verificationToken;
+    @Column(name = "image")
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getUserId() {
         return userId;

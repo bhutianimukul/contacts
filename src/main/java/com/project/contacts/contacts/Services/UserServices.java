@@ -1,7 +1,7 @@
 package com.project.contacts.contacts.Services;
 
+import com.project.contacts.contacts.Models.UserProfileModel;
 import com.project.contacts.contacts.Models.Dto.UserDto;
-import com.project.contacts.contacts.Models.SignupModels.UserSignupRequest;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -18,5 +18,5 @@ public interface UserServices extends UserDetailsService
 
     public boolean changePassword(String email, String newPassword);
 
-    public boolean updateUserProfile(UserDto userDto, UserSignupRequest user);
+    public boolean updateUserProfile(UserDto userDto, UserProfileModel user);
 }

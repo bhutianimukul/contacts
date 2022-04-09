@@ -40,7 +40,7 @@ public class ContactsServiceImpl implements ContactsService {
         List<ContactModel> list = new ArrayList<>();
         for (ContactEntity e : contacts) {
             list.add(new ContactModel(e.getContactId(), e.getName(), e.getPhoneNo(), e.getEmail(), e.getImage(),
-                    e.getCategory()));
+                    e.getCategory(), e.getDescription()));
         }
         return list;
     }
@@ -107,25 +107,26 @@ public class ContactsServiceImpl implements ContactsService {
     @Modifying
     @Transactional
 
-    public boolean updateContact(UserDto userDto, Map<String, String> newContact) {
+    public boolean updateContact(UserDto userDto, ContactModel newContact, String contactId) {
         try {
-            ContactEntity oldContact = repo.findContactsByIdAndUserId(newContact.get("contactId"), userDto.getUserId());
-            log.info(oldContact.getName());
+            ContactEntity oldContact = repo.findContactsByIdAndUserId(contactId, userDto.getUserId());
+            // BeanUtils.copyProperties(newContact, oldContact);
 
-            String name = newContact.containsKey("name") ? newContact.get("name") : oldContact.getName();
-            String email = newContact.containsKey("email") ? newContact.get("email") : oldContact.getEmail();
-            String image = newContact.containsKey("image") ? newContact.get("image") : oldContact.getImage();
-            String category = newContact.containsKey("category") ? newContact.get("category")
-                    : oldContact.getCategory();
-            String phoneNo = newContact.containsKey("phoneNo") ? newContact.get("phoneNo") : oldContact.getPhoneNo();
-
-            oldContact.setName(name);
-            oldContact.setEmail(email);
-            oldContact.setCategory(category);
-            oldContact.setImage(image);
-            oldContact.setPhoneNo(phoneNo);
-            log.info(oldContact.getName());
-            repo.save(oldContact);
+            ContactEntity updatedContact = new ContactEntity();
+            BeanUtils.copyProperties(oldContact, updatedContact);
+            if (newContact.getName() != null)
+                updatedContact.setName(newContact.getName());
+            if (newContact.getPhoneNo() != null)
+                updatedContact.setPhoneNo(newContact.getPhoneNo());
+            if (newContact.getCategory() != null)
+                updatedContact.setCategory(newContact.getCategory());
+            if (newContact.getDescription() != null)
+                updatedContact.setDescription(newContact.getDescription());
+            if (newContact.getImage() != null)
+                updatedContact.setImage(newContact.getImage());
+            if (newContact.getEmail() != null)
+                updatedContact.setEmail(newContact.getEmail());
+            repo.save(updatedContact);
             // UserEntity userEntity = userRepo.findByUserId(userDto.getUserId());
             // ContactEntity updatedContact = new ContactEntity();
             // List<ContactEntity> list = userEntity.getContacts();

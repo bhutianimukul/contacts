@@ -1,9 +1,9 @@
 package com.project.contacts.contacts.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
+import com.project.contacts.contacts.Models.ResponseMessageModel;
+import com.project.contacts.contacts.Models.UserProfileModel;
 import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Models.SigninModels.UserSigninRequest;
 import com.project.contacts.contacts.Models.SigninModels.UserSigninResponse;
@@ -62,11 +62,11 @@ public class UserController {
         boolean mailSent = emailService.sendEmail("Verification Request", user.getEmail(), url.toString());
         if (mailSent == false) {
             service.removeUser(dtoSend);
+            ResponseMessageModel msg = new ResponseMessageModel();
 
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "Unable to send Mail, Please try again later");
+            msg.setMessage("Unable to send Mail, Please try again later");
 
-            return new ResponseEntity<Object>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
         res.setMessage("Email Sent Successfully!!!,Please check your mail to verify");
@@ -84,17 +84,19 @@ public class UserController {
             authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         } catch (BadCredentialsException e) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "User Not Authenticated");
+            ResponseMessageModel msg = new ResponseMessageModel();
+
+            msg.setMessage("User Not Authenticated");
             // throw new UsernameNotFoundException("User not found");
-            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<Object>(msg, HttpStatus.FORBIDDEN);
         }
         UserDto userDto = service.getUserByEmail(user.getEmail());
         if (!userDto.isEnabled()) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "User Not verified");
+            ResponseMessageModel msg = new ResponseMessageModel();
 
-            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+            msg.setMessage("User Not verified");
+
+            return new ResponseEntity<Object>(msg, HttpStatus.FORBIDDEN);
             // throw new UsernameNotFoundException("User not found");
         }
         String token = jwt.generateToken(user.getEmail());
@@ -115,30 +117,28 @@ public class UserController {
     }
 
     @PutMapping("/updateProfile")
-    public ResponseEntity<Object> updateProfile(@RequestBody UserSignupRequest user) {
+    public ResponseEntity<Object> updateProfile(@RequestBody UserProfileModel user) {
         // name image phoneno
-        if (user.getPassword() != null) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "U can not update password");
-            // throw new UsernameNotFoundException("User not found");
-            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
-        }
+
         UserDto userDto = service.getUserByEmail(user.getEmail());
         if (userDto.isEnabled() == false) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "User Not Authenticated");
-            // throw new UsernameNotFoundException("User not found");
-            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
-        }
-        Map<String, String> map = new HashMap<>();
+            ResponseMessageModel msg = new ResponseMessageModel();
+            msg.setMessage("User Not Authenticated");
 
+            // throw new UsernameNotFoundException("User not found");
+            return new ResponseEntity<Object>(msg, HttpStatus.FORBIDDEN);
+        }
+
+        ResponseMessageModel msg = new ResponseMessageModel();
         boolean flag = service.updateUserProfile(userDto, user);
         if (!flag) {
-            map.put("message", "Unable to update your Profile. Please try again later.");
-            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+            msg.setMessage("Unable to update your Profile. Please try again later.");
+
+            return new ResponseEntity<>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        map.put("message", "Profile Updated Successfully!!");
-        return new ResponseEntity<>(map, HttpStatus.OK);
+
+        msg.setMessage("Profile Updated Successfully!!");
+        return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
     // @GetMapping("/logout")

@@ -17,6 +17,7 @@ import java.util.*;
 
 import javax.transaction.Transactional;
 
+import com.project.contacts.contacts.Models.ResponseMessageModel;
 import com.project.contacts.contacts.Models.Contacts.ContactModel;
 import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Services.ContactsService;
@@ -35,20 +36,22 @@ public class ContactController {
 
     // ! Add New Contact
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> addContact(@RequestBody ContactModel model, Principal principal) {
+    public ResponseEntity<ResponseMessageModel> addContact(@RequestBody ContactModel model, Principal principal) {
         String user = principal.getName();
+        ResponseMessageModel msg = new ResponseMessageModel();
         UserDto userDto = userService.getUserByEmail(user);
         if (userDto.isEnabled() == false) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "User Not Authenticated");
+
+            msg.setMessage("User Not Authenticated");
+
             // throw new UsernameNotFoundException("User not found");
-            return new ResponseEntity<Map<String, String>>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(msg, HttpStatus.FORBIDDEN);
         }
 
         service.addContact(model, userDto.getUserId());
-        Map<String, String> map = new HashMap<>();
-        map.put("message", "Contact Added Successfully");
-        return ResponseEntity.ok(map);
+
+        msg.setMessage("Contact Added Successfully");
+        return ResponseEntity.ok(msg);
     }
 
     // ! get contact By id
@@ -78,15 +81,15 @@ public class ContactController {
     @DeleteMapping("/delete")
     @Transactional
     // delete 1 contact
-    public ResponseEntity<Map<String, String>> deleteContact(@RequestParam String contactId, Principal principal)
+    public ResponseEntity<ResponseMessageModel> deleteContact(@RequestParam String contactId, Principal principal)
             throws Exception {
-
+        ResponseMessageModel msg = new ResponseMessageModel();
         String user = principal.getName();
         UserDto userDto = userService.getUserByEmail(user);
         String contactName = service.deleteContactOnce(contactId, userDto.getUserId());
-        Map<String, String> map = new HashMap<>();
-        map.put("message", contactName + " Contact Deleted");
-        return ResponseEntity.ok(map);
+
+        msg.setMessage(contactName + " Contact Deleted");
+        return ResponseEntity.ok(msg);
 
     }
 
@@ -108,27 +111,28 @@ public class ContactController {
     // ! Update Contact
 
     @PutMapping("/updateContact")
-    public ResponseEntity<Object> updateContact(@RequestBody Map<String, String> user, Principal principal) {
+    public ResponseEntity<ResponseMessageModel> updateContact(@RequestBody ContactModel contact,
+            @RequestParam String contactId, Principal principal) {
         // name image phoneno
+        contact.setContactId(contactId);
+        ResponseMessageModel msg = new ResponseMessageModel();
         UserDto userDto = userService.getUserByEmail(principal.getName());
         if (userDto.isEnabled() == false) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "User Not Verified");
+
+            msg.setMessage("User Not Verified");
             // throw new UsernameNotFoundException("User not found");
-            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<ResponseMessageModel>(msg, HttpStatus.FORBIDDEN);
         }
-        boolean flag = service.updateContact(userDto, user);
+        boolean flag = service.updateContact(userDto, contact, contactId);
 
         // UserDto userDto = userService.getUserByEmail(principal.getName());
 
-        Map<String, String> map = new HashMap<>();
-
         if (!flag) {
-            map.put("message", "Unable to update Contact. Please try again later.");
-            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+            msg.setMessage("Unable to update Contact. Please try again later.");
+            return new ResponseEntity<>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        map.put("message", "Contact Updated Successfully!!");
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        msg.setMessage("Contact Updated Successfully!!");
+        return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
 }

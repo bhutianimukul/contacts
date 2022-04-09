@@ -10,17 +10,28 @@ public class ContactModel {
     private String email;
     private String image;
     private String category;
+    private String description;
 
     public ContactModel() {
     }
 
-    public ContactModel(String contactId, String name, String phoneNo, String email, String image, String category) {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ContactModel(String contactId, String name, String phoneNo, String email, String image, String category,
+            String desc) {
         this.contactId = contactId;
         this.category = category;
         this.name = name;
         this.phoneNo = phoneNo;
         this.email = email;
         this.image = image;
+        this.description = desc;
     }
 
     public String getName() {

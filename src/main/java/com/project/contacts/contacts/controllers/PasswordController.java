@@ -1,6 +1,6 @@
 package com.project.contacts.contacts.controllers;
 
-import java.util.*;
+import com.project.contacts.contacts.Models.ResponseMessageModel;
 import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Models.SigninModels.UserSigninRequest;
 import com.project.contacts.contacts.Services.EmailService;
@@ -31,20 +31,21 @@ public class PasswordController {
     OtpService otpService;
 
     @GetMapping("/forgotPassword")
-    public ResponseEntity<Object> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<ResponseMessageModel> forgotPassword(@RequestParam String email) {
         // verify email in db
         UserDto userDto = null;
-        Map<String, String> map = new HashMap<>();
+        ResponseMessageModel msg = new ResponseMessageModel();
         try {
             userDto = userServices.getUserByEmail(email);
             if (userDto.isEnabled() == false)
                 throw new Exception();
         } catch (Exception e) {
             // userDto = null;
-            map.put("message", "User Not Found, Enter a valid email.");
+            msg.setMessage("User Not Found, Enter a valid email.");
+
             // System.out.println(e);
 
-            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<ResponseMessageModel>(msg, HttpStatus.FORBIDDEN);
         }
 
         // if exist send otp
@@ -53,53 +54,56 @@ public class PasswordController {
         boolean flag = emailService.sendOtp(email, otp);
         // sendOtp();
         if (!flag) {
-            map.put("message", "Unable to Send OTP. Please Try again later");
+            msg.setMessage("Unable to Send OTP. Please Try again later");
+
             otpService.clearOTP(userDto.getEmail());
-            return new ResponseEntity<Object>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseMessageModel>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
+        msg.setMessage("OTP Sent Succesfully. Check your email for the OTP.");
 
-        map.put("message", "OTP Sent Succesfully. Check your email for the OTP.");
-
-        return new ResponseEntity<Object>(map, HttpStatus.OK);
+        return new ResponseEntity<ResponseMessageModel>(msg, HttpStatus.OK);
         // else no user found message
         // store otp
 
     }
 
     @GetMapping("/verifyOTP")
-    public ResponseEntity<Object> verifyOtp(@RequestParam String enteredOtp, @RequestParam String email) {
+    public ResponseEntity<ResponseMessageModel> verifyOtp(@RequestParam String enteredOtp, @RequestParam String email) {
 
         String originalOtp = "" + otpService.getOtp(email);
-        Map<String, Boolean> map = new HashMap<>();
+        ResponseMessageModel msg = new ResponseMessageModel();
         // System.out.println("session OTP " + originalOtp);
         // System.out.println("entered OTP " + enteredOtp);
 
         if (originalOtp.equals(enteredOtp)) {
-            map.put("verified", true);
+            msg.setMessage("OTP VERIFIED");
             otpService.setOtp(email);
-            return new ResponseEntity<Object>(map, HttpStatus.OK);
+            return new ResponseEntity<ResponseMessageModel>(msg, HttpStatus.OK);
         } else {
-            map.put("verified", false);
+            msg.setMessage("unable to verify otp");
 
-            return new ResponseEntity<Object>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<ResponseMessageModel>(msg, HttpStatus.FORBIDDEN);
 
         }
 
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<Object> changePassword(@RequestBody UserSigninRequest req) {
-        Map<String, String> map = new HashMap<>();
+    public ResponseEntity<ResponseMessageModel> changePassword(@RequestBody UserSigninRequest req) {
+        ResponseMessageModel msg = new ResponseMessageModel();
+
         try {
             userServices.changePassword(req.getEmail(), req.getPassword());
-            map.put("message", "Password Changed Successfully!!!");
+            msg.setMessage("Password Changed Successfully!!!");
+
         } catch (Exception e) {
-            map.put("message", "Password Changed Unsuccessfully!!!");
-            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
+            msg.setMessage("Unable to change password");
+
+            return new ResponseEntity<>(msg, HttpStatus.FORBIDDEN);
 
         }
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(msg, HttpStatus.OK);
         // return true;
 
     }

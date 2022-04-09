@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import javax.transaction.Transactional;
 
 import org.springframework.security.core.userdetails.User;
+
+import com.project.contacts.contacts.Models.UserProfileModel;
 import com.project.contacts.contacts.Models.Dto.UserDto;
 import com.project.contacts.contacts.Models.Entities.UserEntity;
-import com.project.contacts.contacts.Models.SignupModels.UserSignupRequest;
 import com.project.contacts.contacts.Utilities.JWTUtils;
 import com.project.contacts.contacts.Utilities.Utils;
 import com.project.contacts.contacts.repositories.UserRepository;
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserServices {
         user.setVerificationToken(util.generateUserId(15));
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user, userEntity);
+        userEntity.setImage("No image yet");
         repo.save(userEntity);
         return user;
     }
@@ -116,13 +118,19 @@ public class UserServiceImpl implements UserServices {
     @Override
     @Modifying
     @Transactional
-    public boolean updateUserProfile(UserDto userDto, UserSignupRequest user) {
+    public boolean updateUserProfile(UserDto userDto, UserProfileModel user) {
         try {
             UserEntity userEntity = repo.findByUserId(userDto.getUserId());
+            UserEntity newUser = new UserEntity();
+            BeanUtils.copyProperties(userEntity, newUser);
+            if (user.getName() != null)
+                newUser.setName(user.getName());
+            if (user.getImage() != null)
+                newUser.setImage(user.getImage());
+            if (user.getPhoneNo() != null)
+                newUser.setPhoneNo(user.getPhoneNo());
 
-            BeanUtils.copyProperties(user, userEntity);
-
-            repo.save(userEntity);
+            repo.save(newUser);
         } catch (Exception e) {
             return false;
         }

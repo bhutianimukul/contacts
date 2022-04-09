@@ -23,15 +23,24 @@ public class ContactEntity implements Serializable {
     private String email;
     @Column(name = "phone_no", nullable = false, length = 10)
     private String phoneNo;
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "category", nullable = false)
     private String category;
-
+    @Column(name = "description", nullable = false, length = 200)
+    private String description;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     public UserEntity user;
-    @Column(name = "image")
-    private String image;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getImage() {
         return image;
