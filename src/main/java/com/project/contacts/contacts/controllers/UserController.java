@@ -119,8 +119,15 @@ public class UserController {
     @PutMapping("/updateProfile")
     public ResponseEntity<Object> updateProfile(@RequestBody UserProfileModel user) {
         // name image phoneno
+        UserDto userDto = null;
+        try {
+            userDto = service.getUserByEmail(user.getEmail());
+        } catch (Exception e) {
+            ResponseMessageModel msg = new ResponseMessageModel();
+            msg.setMessage(e.toString());
+            return new ResponseEntity<>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        UserDto userDto = service.getUserByEmail(user.getEmail());
         if (userDto.isEnabled() == false) {
             ResponseMessageModel msg = new ResponseMessageModel();
             msg.setMessage("User Not Authenticated");
