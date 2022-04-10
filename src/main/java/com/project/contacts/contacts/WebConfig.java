@@ -1,4 +1,4 @@
-package com.project.contacts;
+package com.project.contacts.contacts;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
