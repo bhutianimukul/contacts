@@ -2,7 +2,6 @@ package com.project.contacts.contacts.Services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -30,7 +29,6 @@ public class ContactsServiceImpl implements ContactsService {
     UserRepository userRepo;
     @Autowired
     Utils util;
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContactsServiceImpl.class);
 
     @Override
     public List<ContactModel> getAllContacts(String userId, int page, int limit) {
@@ -127,42 +125,7 @@ public class ContactsServiceImpl implements ContactsService {
             if (newContact.getEmail() != null)
                 updatedContact.setEmail(newContact.getEmail());
             repo.save(updatedContact);
-            // UserEntity userEntity = userRepo.findByUserId(userDto.getUserId());
-            // ContactEntity updatedContact = new ContactEntity();
-            // List<ContactEntity> list = userEntity.getContacts();
-            // log.info("contact Name from dto" + userDto.getName());
-            // log.info("contact Name from dto" + userDto.getName());
-            // log.error("before");
-            // for (ContactEntity c : list) {
-            // log.info(c.getName());
-            // if (c.getContactId().equals(contact.getContactId())) {
 
-            // BeanUtils.copyProperties(c, updatedContact);
-            // list.remove(c);
-            // log.info("contact Name in db" + updatedContact.getName());
-
-            // break;
-            // }
-
-            // }
-            // // for (int i = 0; i < list.size(); i++) {
-            // // if (list.get(i).getContactId() == contact.getContactId()) {
-            // // ContactEntity c = list.remove(i);
-            // // BeanUtils.copyProperties(c, updatedContact);
-            // // System.out.println("*** contact Found"+ c.getName());
-            // // break;
-            // // }
-            // // }
-
-            // BeanUtils.copyProperties(contact, updatedContact);
-            // list.add(updatedContact);
-            // log.error("before");
-            // for (ContactEntity c : list) {
-            // log.info(c.getName());
-            // }
-            // log.info("contact Name updated" + updatedContact.getName());
-            // userEntity.setContacts(list);
-            // userRepo.save(userEntity);
         } catch (Exception e) {
             return false;
         }

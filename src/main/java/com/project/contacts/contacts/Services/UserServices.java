@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserServices extends UserDetailsService
 
 {
-    public UserDto signupUser(UserDto user);
+    public UserDto signupUser(UserDto user) throws Exception;
 
     public UserDto getUserByEmail(String email);
 

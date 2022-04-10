@@ -35,9 +35,12 @@ public class UserServiceImpl implements UserServices {
     JWTUtils jwt;
     @Autowired
     OtpService otpService;
+    @Autowired
+    S3ImageService imageService;
 
     @Override
-    public UserDto signupUser(UserDto user) {
+    public UserDto signupUser(UserDto user) throws Exception {
+
         UserEntity foundUser = repo.findByEmail(user.getEmail());
         if (foundUser != null) {
             throw new RuntimeException("User already signed up");
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserServices {
         user.setVerificationToken(util.generateUserId(15));
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user, userEntity);
-        userEntity.setImage("No image yet");
+
         repo.save(userEntity);
         return user;
     }

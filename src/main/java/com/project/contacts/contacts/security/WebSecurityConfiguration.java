@@ -15,6 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +37,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
    @Override
    protected void configure(HttpSecurity http) throws Exception {
+      http.cors();
       http.csrf().disable();
 
       http.authorizeRequests().antMatchers("/v3/api-docs",
@@ -62,4 +66,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
       return super.authenticationManager();
    }
 
+   @Bean
+   public CorsConfigurationSource corsConfigurationSource() {
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      CorsConfiguration config = new CorsConfiguration();
+      config.addAllowedOrigin("*");
+      config.setAllowCredentials(true);
+      config.addAllowedHeader("X-Requested-With");
+      config.addAllowedHeader("Content-Type");
+      config.addAllowedMethod(HttpMethod.POST);
+      config.addAllowedMethod(HttpMethod.GET);
+      config.addAllowedMethod(HttpMethod.PUT);
+      config.addAllowedMethod(HttpMethod.DELETE);
+      source.registerCorsConfiguration("/**", config);
+      return source;
+   }
 }

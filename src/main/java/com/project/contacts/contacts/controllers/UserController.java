@@ -10,6 +10,7 @@ import com.project.contacts.contacts.Models.SigninModels.UserSigninResponse;
 import com.project.contacts.contacts.Models.SignupModels.UserSignupRequest;
 import com.project.contacts.contacts.Models.SignupModels.UserSignupResponse;
 import com.project.contacts.contacts.Services.EmailService;
+
 import com.project.contacts.contacts.Services.UserServices;
 import com.project.contacts.contacts.Utilities.JWTUtils;
 import com.project.contacts.contacts.Utilities.Utils;
@@ -47,6 +48,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<Object> userSignup(@RequestBody UserSignupRequest user, HttpServletRequest req)
             throws Exception {
+
         UserSignupResponse res = new UserSignupResponse();
         BeanUtils.copyProperties(user, res);
         res.setUserId(util.generateUserId(30));
@@ -147,22 +149,5 @@ public class UserController {
         msg.setMessage("Profile Updated Successfully!!");
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
-
-    // @GetMapping("/logout")
-    // public ResponseEntity<?> logout(Principal principal) {
-
-    // UserDto userDto = service.getUserByEmail(principal.getName());
-
-    // Map<String, String> map = new HashMap<>();
-
-    // boolean flag = service.updateUserProfile(userDto, user);
-    // if (!flag) {
-    // map.put("message", "Unable to update your Profile. Please try again later.");
-    // return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // map.put("message", "Profile Updated Successfully!!");
-    // return new ResponseEntity<>(map, HttpStatus.OK);
-    // return ResponseEntity.ok(map);
-    // }
 
 }
