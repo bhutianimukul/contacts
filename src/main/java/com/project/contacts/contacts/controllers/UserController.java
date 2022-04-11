@@ -132,7 +132,7 @@ public class UserController {
 
         if (userDto.isEnabled() == false) {
             ResponseMessageModel msg = new ResponseMessageModel();
-            msg.setMessage("User Not Authenticated");
+            msg.setMessage("User Not Verfied");
 
             // throw new UsernameNotFoundException("User not found");
             return new ResponseEntity<Object>(msg, HttpStatus.FORBIDDEN);
@@ -155,6 +155,13 @@ public class UserController {
         UserProfileModel res = new UserProfileModel();
         try {
             UserDto userDto = service.getUserById(userId);
+            if (userDto.isEnabled() == false) {
+                ResponseMessageModel msg = new ResponseMessageModel();
+                msg.setMessage("User Not Verified");
+
+                // throw new UsernameNotFoundException("User not found");
+                return new ResponseEntity<Object>(msg, HttpStatus.FORBIDDEN);
+            }
             BeanUtils.copyProperties(userDto, res);
 
             return ResponseEntity.ok(res);
