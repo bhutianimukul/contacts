@@ -14,7 +14,7 @@
 	<name>contacts</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 	</properties>
 	<dependencyManagement>
         <dependencies>
@@ -108,7 +108,7 @@
 <dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>19.0</version>
+			<version>16.0</version>
 		</dependency>
 	</dependencies>
 	<build>
