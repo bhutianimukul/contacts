@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -148,6 +148,21 @@ public class UserController {
 
         msg.setMessage("Profile Updated Successfully!!");
         return new ResponseEntity<>(msg, HttpStatus.OK);
+    }
+
+    @PostMapping("/getUser")
+    public ResponseEntity<Object> getUser(@RequestParam String userId) {
+        UserProfileModel res = new UserProfileModel();
+        try {
+            UserDto userDto = service.getUserById(userId);
+            BeanUtils.copyProperties(userDto, res);
+
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            ResponseMessageModel msg = new ResponseMessageModel();
+            msg.setMessage(e.getMessage());
+            return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
+        }
     }
 
 }

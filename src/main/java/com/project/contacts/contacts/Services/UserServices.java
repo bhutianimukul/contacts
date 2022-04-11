@@ -19,4 +19,6 @@ public interface UserServices extends UserDetailsService
     public boolean changePassword(String email, String newPassword);
 
     public boolean updateUserProfile(UserDto userDto, UserProfileModel user);
+
+    public UserDto getUserById(String id) throws Exception;
 }
