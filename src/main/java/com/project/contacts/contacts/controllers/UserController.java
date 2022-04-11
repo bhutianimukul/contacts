@@ -150,7 +150,7 @@ public class UserController {
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
-    @PostMapping("/getUser")
+    @GetMapping("/getUser")
     public ResponseEntity<Object> getUser(@RequestParam String userId) {
         UserProfileModel res = new UserProfileModel();
         try {
