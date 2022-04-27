@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,7 @@ public class UserController {
     EmailService emailService;
 
     @PostMapping("/signup")
+    @CrossOrigin
     public ResponseEntity<Object> userSignup(@RequestBody UserSignupRequest user, HttpServletRequest req)
             throws Exception {
 
@@ -79,6 +81,7 @@ public class UserController {
 
     // Signin
     @PostMapping("/signin")
+    @CrossOrigin
     public ResponseEntity<Object> userSignin(@RequestBody UserSigninRequest user) {
         UserSigninResponse response = new UserSigninResponse();
 
@@ -108,6 +111,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/signup/verify/{verificationToken}")
+    @CrossOrigin
     public ResponseEntity<String> verify(@PathVariable("verificationToken") String verificationToken) {
 
         try {
@@ -119,6 +123,7 @@ public class UserController {
     }
 
     @PutMapping("/updateProfile")
+    @CrossOrigin
     public ResponseEntity<Object> updateProfile(@RequestBody UserProfileModel user) {
         // name image phoneno
         UserDto userDto = null;
@@ -151,6 +156,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
+    @CrossOrigin
     public ResponseEntity<Object> getUser(@RequestParam String userId) {
         UserProfileModel res = new UserProfileModel();
         try {

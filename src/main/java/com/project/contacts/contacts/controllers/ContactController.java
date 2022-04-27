@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.project.contacts.contacts.Services.UserServices;
 import com.project.contacts.contacts.Utilities.JWTUtils;
 
 @RestController
+
 @RequestMapping("/contacts")
 public class ContactController {
     @Autowired
@@ -35,6 +37,7 @@ public class ContactController {
     JWTUtils jwt;
 
     // ! Add New Contact
+    @CrossOrigin
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessageModel> addContact(@RequestBody ContactModel model, Principal principal) {
         String user = principal.getName();
@@ -56,6 +59,7 @@ public class ContactController {
 
     // ! get contact By id
     @GetMapping("/get")
+    @CrossOrigin
     public ResponseEntity<ContactModel> getContactById(@RequestParam String contactId) {
 
         return ResponseEntity.ok((service.getContactById(contactId)));
@@ -63,6 +67,7 @@ public class ContactController {
 
     // ! Get All Contacts
     @GetMapping("/getAll")
+    @CrossOrigin
     public ResponseEntity<Object> getAllContactByUserId(@RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "limit", defaultValue = "10") int limit, Principal principal) {
 
@@ -79,6 +84,7 @@ public class ContactController {
 
     // ! Delete One Contact
     @DeleteMapping("/delete")
+    @CrossOrigin
     @Transactional
     // delete 1 contact
     public ResponseEntity<ResponseMessageModel> deleteContact(@RequestParam String contactId, Principal principal)
@@ -95,6 +101,7 @@ public class ContactController {
 
     // ! DELETE Multiple Contact
     @DeleteMapping("/deleteMultiple")
+    @CrossOrigin
     @Transactional
     // delete 1 contact
     public ResponseEntity<Map<String, String>> deleteMultiple(@RequestBody Map<String, List<String>> map,
@@ -111,6 +118,7 @@ public class ContactController {
     // ! Update Contact
 
     @PutMapping("/updateContact")
+    @CrossOrigin
     public ResponseEntity<ResponseMessageModel> updateContact(@RequestBody ContactModel contact,
             @RequestParam String contactId, Principal principal) {
         // name image phoneno
