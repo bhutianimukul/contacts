@@ -1,5 +1,7 @@
 package com.project.contacts.contacts.security;
 
+import java.util.Arrays;
+
 import com.project.contacts.contacts.security.Filters.AuthorizationFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
    @Override
    protected void configure(HttpSecurity http) throws Exception {
-      http.cors();
+      http.cors().configurationSource(corsConfigurationSource());
       http.csrf().disable();
 
       http.authorizeRequests().antMatchers("/v3/api-docs",
@@ -67,18 +69,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
    }
 
    @Bean
-   public CorsConfigurationSource corsConfigurationSource() {
+   CorsConfigurationSource corsConfigurationSource() {
+      CorsConfiguration configuration = new CorsConfiguration();
+      configuration.setAllowedOrigins(Arrays.asList("*"));
+      configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+      configuration.setAllowCredentials(true);
+
+      configuration.addAllowedOrigin("*");
+      configuration.addAllowedHeader("*");
+      configuration.addAllowedMethod("*");
       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      CorsConfiguration config = new CorsConfiguration();
-      config.addAllowedOrigin("*");
-      config.setAllowCredentials(true);
-      config.addAllowedHeader("X-Requested-With");
-      config.addAllowedHeader("Content-Type");
-      config.addAllowedMethod(HttpMethod.POST);
-      config.addAllowedMethod(HttpMethod.GET);
-      config.addAllowedMethod(HttpMethod.PUT);
-      config.addAllowedMethod(HttpMethod.DELETE);
-      source.registerCorsConfiguration("/**", config);
+      source.registerCorsConfiguration("/**", configuration);
       return source;
    }
 }
