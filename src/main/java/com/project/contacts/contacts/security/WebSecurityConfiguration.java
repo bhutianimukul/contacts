@@ -74,7 +74,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
       configuration.setAllowedOrigins(Arrays.asList("*"));
       configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
       configuration.setAllowCredentials(true);
-
       configuration.addAllowedOrigin("*");
       configuration.addAllowedHeader("*");
       configuration.addAllowedMethod("*");
