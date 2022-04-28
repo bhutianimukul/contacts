@@ -1,9 +1,7 @@
 package com.project.contacts.contacts.security;
 
 import java.util.Arrays;
-
 import com.project.contacts.contacts.security.Filters.AuthorizationFilter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +24,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
    @Autowired
    UserDetailsService usersService;
-
    @Autowired
    BCryptPasswordEncoder bcrypt;
    @Autowired
@@ -41,7 +38,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
    protected void configure(HttpSecurity http) throws Exception {
       http.cors().configurationSource(corsConfigurationSource());
       http.csrf().disable();
-
       http.authorizeRequests().antMatchers("/v3/api-docs",
             "/swagger-ui/**",
             "/swagger-resources",
@@ -52,14 +48,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
       http.authorizeRequests().antMatchers(HttpMethod.POST, "/users/signin").permitAll();
       http.authorizeRequests().antMatchers("/h2/**").permitAll();
       http.authorizeRequests().antMatchers("/password/**").permitAll();
-
       http.authorizeRequests().anyRequest()
             .authenticated();
       http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
-
       http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
       http.headers().frameOptions().disable();
-
    }
 
    @Override
