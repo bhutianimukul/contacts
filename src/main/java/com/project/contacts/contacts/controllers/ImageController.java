@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/image")
-
+@CrossOrigin
 public class ImageController {
     @Autowired
     S3ImageService imageService;
@@ -26,7 +26,7 @@ public class ImageController {
     Utils util;
 
     @PostMapping("/upload")
-    @CrossOrigin
+
     public ResponseEntity<Object> uploadImage(@RequestParam("image") MultipartFile file)
             throws Exception {
         String id = util.generateUserId(15);

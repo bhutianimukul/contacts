@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin
 public class UserController {
     @Autowired
     Utils util;
@@ -47,7 +48,7 @@ public class UserController {
     EmailService emailService;
 
     @PostMapping("/signup")
-    @CrossOrigin
+
     public ResponseEntity<Object> userSignup(@RequestBody UserSignupRequest user, HttpServletRequest req)
             throws Exception {
 
@@ -81,7 +82,7 @@ public class UserController {
 
     // Signin
     @PostMapping("/signin")
-    @CrossOrigin
+
     public ResponseEntity<Object> userSignin(@RequestBody UserSigninRequest user) {
         UserSigninResponse response = new UserSigninResponse();
 
@@ -111,7 +112,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/signup/verify/{verificationToken}")
-    @CrossOrigin
+
     public ResponseEntity<String> verify(@PathVariable("verificationToken") String verificationToken) {
 
         try {
@@ -123,7 +124,7 @@ public class UserController {
     }
 
     @PutMapping("/updateProfile")
-    @CrossOrigin
+
     public ResponseEntity<Object> updateProfile(@RequestBody UserProfileModel user) {
         // name image phoneno
         UserDto userDto = null;
@@ -156,7 +157,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    @CrossOrigin
+
     public ResponseEntity<Object> getUser(@RequestParam String userId) {
         UserProfileModel res = new UserProfileModel();
         try {

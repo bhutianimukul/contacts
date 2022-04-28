@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/password")
+@CrossOrigin
 public class PasswordController {
 
     @Autowired
@@ -32,7 +33,7 @@ public class PasswordController {
     OtpService otpService;
 
     @GetMapping("/forgotPassword")
-    @CrossOrigin
+
     public ResponseEntity<ResponseMessageModel> forgotPassword(@RequestParam String email) {
         // verify email in db
         UserDto userDto = null;
@@ -71,7 +72,7 @@ public class PasswordController {
     }
 
     @GetMapping("/verifyOTP")
-    @CrossOrigin
+
     public ResponseEntity<ResponseMessageModel> verifyOtp(@RequestParam String enteredOtp, @RequestParam String email) {
 
         String originalOtp = "" + otpService.getOtp(email);
@@ -93,7 +94,7 @@ public class PasswordController {
     }
 
     @PostMapping("/changePassword")
-    @CrossOrigin
+
     public ResponseEntity<ResponseMessageModel> changePassword(@RequestBody UserSigninRequest req) {
         ResponseMessageModel msg = new ResponseMessageModel();
 
