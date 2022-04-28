@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/password")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PasswordController {
 
     @Autowired

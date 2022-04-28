@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/image")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ImageController {
     @Autowired
     S3ImageService imageService;

@@ -26,7 +26,7 @@ import com.project.contacts.contacts.Services.UserServices;
 import com.project.contacts.contacts.Utilities.JWTUtils;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/contacts")
 public class ContactController {
     @Autowired
